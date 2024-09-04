@@ -41,5 +41,33 @@ $b = &$a;
 echo $a . "<br> <br>";
 echo $b . "<br> <br>";
 echo $c . "<br> <br>";
+unset($a);
+unset($b);
+unset($c);
+
+//Ejercicio 3
+echo "<b>Ejercicio 3: </b> <br> <br>";
+$a = "PHP5";
+echo $a . "<br> <br>";
+
+$z[] = &$a;
+print_r($a);
+echo "<br> <br>";
+
+$b = "5a version de PHP";
+echo $b . "<br> <br>";
+
+$c = $b*10;
+echo $c . "<br> <br>";
+
+$a .= $b;
+echo $a . "<br> <br>";
+
+$b *= $c;
+echo $b . "<br> <br>";
+
+$z[0] = “MySQL”;
+print_r($a);
+echo "<br> <br>"; 
 
 ?>
