@@ -120,7 +120,6 @@ unset($c);
 
 //Ejercicio 6
 echo "<b>Ejercicio 6: </b> <br> <br>";
-// Asignaciones
 $a = "0";
 echo "Valor de \$a: ";
 var_dump($a);
@@ -153,6 +152,28 @@ echo "<br>";
 
 echo "Valor de \$c como cadena: " . var_export($c, true) . "<br>";
 echo "Valor de \$e como cadena: " . var_export($e, true) . "<br>";
+echo "<br>";
 
+unset($a);
+unset($b);
+unset($c);
+unset($d);
+unset($e);
+unset($f);
+
+//Ejercicio 7
+echo "<b>Ejercicio 7: </b> <br> <br>";
+if (isset($_SERVER['SERVER_SOFTWARE'])) {
+    $apache_version = $_SERVER['SERVER_SOFTWARE'];
+    echo "Versión de Apache: " . $apache_version . "<br>";
+} else {
+    echo "No se puede determinar la versión de Apache.<br>";
+}
+echo "Versión de PHP: " . phpversion() . "<br>";
+
+echo "Sistema operativo del servidor: " . php_uname('s') . "<br>";
+
+echo "Idioma del navegador (cliente): " . $_SERVER['HTTP_ACCEPT_LANGUAGE'] . "<br>";
+echo "<br>";
 
 ?>
