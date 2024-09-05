@@ -103,4 +103,19 @@ unset($b);
 unset($c);
 unset($z);
 
+//Ejercicio 5
+echo "<b>Ejercicio 5: </b> <br> <br>";
+$a = "7 personas";
+echo $a . "<br> <br>";
+$b = (integer) $a;
+echo $b . "<br> <br>";
+$a = "9E3";
+echo $a . "<br> <br>";
+$c = (double) $a;
+echo $c . "<br> <br>";
+
+unset($a);
+unset($b);
+unset($c);
+
 ?>
