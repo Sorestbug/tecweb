@@ -66,8 +66,41 @@ echo $a . "<br> <br>";
 $b *= $c;
 echo $b . "<br> <br>";
 
-$z[0] = “MySQL”;
+$z[0] = "MySQL";
 print_r($a);
-echo "<br> <br>"; 
+echo "<br> <br>";
+unset($a);
+unset($b);
+unset($c);
+unset($z);
+
+//Ejercicio 4
+echo "<b>Ejercicio 4: </b> <br> <br>";
+$GLOBALS['a'] = "PHP5";
+echo $a . "<br> <br>";
+
+$GLOBALS['z'][] = &$GLOBALS['a'];
+print_r($a);
+echo "<br> <br>";
+
+$GLOBALS['b'] = "5a version de PHP";
+echo $b . "<br> <br>";
+
+$GLOBALS['c'] = $b*10;
+echo $c . "<br> <br>";
+
+$a .= $b;
+echo $a . "<br> <br>";
+
+$b *= $c;
+echo $b . "<br> <br>";
+
+$z[0] = "MySQL";
+print_r($a);
+echo "<br> <br>";
+unset($a);
+unset($b);
+unset($c);
+unset($z);
 
 ?>
