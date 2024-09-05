@@ -118,4 +118,41 @@ unset($a);
 unset($b);
 unset($c);
 
+//Ejercicio 6
+echo "<b>Ejercicio 6: </b> <br> <br>";
+// Asignaciones
+$a = "0";
+echo "Valor de \$a: ";
+var_dump($a);
+echo "<br>";
+
+$b = "TRUE";
+echo "Valor de \$b: ";
+var_dump($b);
+echo "<br>";
+
+$c = FALSE;
+echo "Valor de \$c: ";
+var_dump($c);
+echo "<br>";
+
+$d = ($a OR $b);
+echo "Valor de \$d: ";
+var_dump($d);
+echo "<br>";
+
+$e = ($a AND $c);
+echo "Valor de \$e: ";
+var_dump($e);
+echo "<br>";
+
+$f = ($a XOR $b);
+echo "Valor de \$f: ";
+var_dump($f);
+echo "<br>";
+
+echo "Valor de \$c como cadena: " . var_export($c, true) . "<br>";
+echo "Valor de \$e como cadena: " . var_export($e, true) . "<br>";
+
+
 ?>
