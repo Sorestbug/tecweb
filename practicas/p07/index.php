@@ -8,7 +8,7 @@
 <body>
 
     <h2>Ejercicio 1</h2>
-    <h3>Escribir programa para comprobar si un número es un múltiplo de 5 y 7</h3>
+    <h3>Comprobar si un número es un múltiplo de 5 y 7 (mediante URL)</h3>
 
     <?php
     include './src/funciones.php';
@@ -25,9 +25,19 @@
     ?>
 
     <h2>Ejercicio 2</h2>
-    <h3>Generar 3 números aleatorioa hasta tener impar/par/impar</h3>
+    <h3>Generar 3 números aleatorios hasta tener impar/par/impar</h3>
     <?php
     generarSecuencia();
+    ?>
+
+    <h2>Ejercicio 3</h2>
+    <h3>Ciclo While hasta obtener un número aleatorio que sea multiplo de otro dado</h3>
+    <?php
+    if (isset($_GET['numero'])) {
+        encontrarMultiplo($numero);
+    } else {
+        echo "<p>Por favor, proporciona un múltiplo en la URL como ?multiplo=.</p>";
+    }
     ?>
 
 

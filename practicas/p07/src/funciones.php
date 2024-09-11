@@ -28,4 +28,16 @@ function generarSecuencia() { //Ejercicio 2
     echo "<p>$numerosGenerados números obtenidos en $iteraciones iteraciones.</p>";
 }
 
+function encontrarMultiplo($multiplo) { // Ejercicio 3
+    $numeroAleatorio = rand(1, 999);
+    $intentos = 0;
+
+    while ($numeroAleatorio % $multiplo != 0) {
+        $numeroAleatorio = rand(1, 999);
+        $intentos++;
+    }
+    echo "<p>Número aleatorio múltiplo de $multiplo: $numeroAleatorio (en $intentos intentos).</p>";
+}
+
+
 ?>
