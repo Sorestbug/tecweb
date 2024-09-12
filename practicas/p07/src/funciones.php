@@ -40,4 +40,19 @@ function encontrarMultiplo($multiplo) { // Ejercicio 3
 }
 
 
+function crearArregloLetras() { // Ejercicio 4
+    $arreglo = array();
+    for ($i = 97; $i <= 122; $i++) {
+        $arreglo[$i] = chr($i);
+    }
+
+    echo "<table border='1'>";
+    echo "<tr><th>Índice ASCII</th><th>Letra</th></tr>";
+    foreach ($arreglo as $key => $value) {
+        echo "<tr><td>$key</td><td>$value</td></tr>";
+    }
+    echo "</table>";
+}
+
+
 ?>

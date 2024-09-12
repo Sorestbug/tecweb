@@ -40,6 +40,12 @@
     }
     ?>
 
+    <h2>Ejercicio 4</h2>
+    <h3>Arreglo para letras usando chr(n)</h3>
+    <?php
+    crearArregloLetras();
+    ?>
+
 
 </body>
 </html>
