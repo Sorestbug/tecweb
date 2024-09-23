@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Registro al Concurso</title>
+    <style type="text/css">
+        body {
+          font-family: Arial, sans-serif;
+          background-image: url('./Imagenes/TennisF.png');
+          background-size: cover;
+          background-attachment: fixed;
+          color: #333;
+          margin: 20px;
+          padding: 20px;
+        }
+
+        h1, h2 {
+          color: #2c3e50;
+          text-align: center;
+          background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco claro */
+          padding: 10px;
+          border-radius: 5px;
+        }
+
+        p {
+          text-align: center;
+          color: #34495e;
+          font-size: 1.1em;
+          margin: 20px auto;
+          max-width: 600px;
+          background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco claro */
+          padding: 10px;
+          border-radius: 5px;
+        }
+
+        form {
+          background-color: rgba(255, 255, 255, 0.9);
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          max-width: 600px;
+          margin: auto;
+        }
+
+        fieldset {
+          border: none;
+          margin-bottom: 20px;
+        }
+
+        legend {
+          font-size: 1.2em;
+          font-weight: bold;
+          margin-bottom: 10px;
+          color: #2980b9;
+        }
+
+        li {
+          list-style-type: none;
+          margin-bottom: 10px;
+        }
+
+        input[type="text"], textarea, select {
+          width: 100%;
+          padding: 10px;
+          margin: 5px 0;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+
+        textarea {
+          resize: vertical;
+        }
+
+        button {
+          background-color: #3498db;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          font-size: 16px;
+          cursor: pointer;
+          border-radius: 4px;
+          margin-right: 10px;
+        }
+
+        button:hover {
+          background-color: #2980b9;
+        }
+
+        button[type="reset"] {
+          background-color: #e74c3c;
+        }
+
+        button[type="reset"]:hover {
+          background-color: #c0392b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Registro al Concurso &ldquo;Chidos mis Tenis&rdquo;</h1>
+
+    <p><strong>¿Quieres cambiar tus viejos tenis por un par personalizado de <span style="color: #e74c3c;">Tenis Mike®</span>?</strong><br>
+    Justifica por qué tus tenis <em>tienen que irse</em> y podrías ser uno de los diez afortunados ganadores.</p>
+
+    <form action="/tecweb/practicas/p09/concurso.php" method="post">
+      <h2>Información del Participante</h2>
+      <fieldset>    
+          <li>Nombre: <input type="text" name="name"></li>
+          <li>Dirección de E-mail: <input type="text" name="email"></li> <!-- Corrige 'email' -->
+          <li>Número Telefónico: <input type="text" name="phone"></li> <!-- Corrige 'phone' -->
+  
+          <li>Mis tenis son tan feos porque... <br>
+          <textarea name="story" rows="4" cols="60" maxlength="300" placeholder="Máximo de 300 caracteres"></textarea></li> <!-- Corrige 'story' -->
+      </fieldset>
+  
+      <h2>Diseña tus Mike personalizados:</h2>
+      <fieldset>
+          <legend>Color (escoge uno):</legend>
+          <li><input type="radio" name="color" value="red">Rojo</li>  
+          <li><input type="radio" name="color" value="blue">Azul</li>
+          <li><input type="radio" name="color" value="black">Negro</li>
+          <li><input type="radio" name="color" value="silver">Plata</li>
+  
+          <legend>Características <em>(escoge tantas como quieras)</em>:</legend>
+          <li><input type="checkbox" name="features[]" value="laces">Cordones Brillantes</li>
+          <li><input type="checkbox" name="features[]" value="logo" checked>Logo Metálico</li>
+          <li><input type="checkbox" name="features[]" value="sole">Suela Luminosa</li>
+          <li><input type="checkbox" name="features[]" value="wifi">WiFi Integrado</li>
+  
+          <legend>Talla</legend>
+          <cite>Las medidas reflejan el estándar masculino:</cite>
+          <select name="size" size="1">  
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+          </select>
+      </fieldset>
+  
+      <button type="submit">Enviar</button>
+      <button type="reset">Reiniciar</button>
+  </form>
+  
+
+</body>
+</html>
