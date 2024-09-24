@@ -38,8 +38,8 @@ if ($result->num_rows > 0) {
     EOT;
 } else {
     // Si no existe, insertar en la BD
-    $sql_insert = "INSERT INTO productos (nombre, marca, modelo, precio, detalles, unidades, imagen) 
-                   VALUES ('{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}')";
+    $sql_insert = "INSERT INTO productos (nombre, marca, modelo, precio, detalles, unidades, imagen, eliminado) 
+                   VALUES ('{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}', 0)";
 
     if ($link->query($sql_insert)) {
         // Si la inserción fue exitosa, mostrar resumen de datos insertados
@@ -61,6 +61,7 @@ if ($result->num_rows > 0) {
                     <li><strong>Detalles:</strong> {$detalles}</li>
                     <li><strong>Unidades:</strong> {$unidades}</li>
                     <li><strong>Imagen:</strong> {$imagen}</li>
+                    <li><strong>Eliminado:</strong> 0</li>
                 </ul>
             </body>
         </html>
