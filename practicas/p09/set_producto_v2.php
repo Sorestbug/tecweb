@@ -38,8 +38,12 @@ if ($result->num_rows > 0) {
     EOT;
 } else {
     // Si no existe, insertar en la BD
+    //$sql = "INSERT INTO productos VALUES (null, '{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}')";
+
+    // Nueva query
     $sql_insert = "INSERT INTO productos (nombre, marca, modelo, precio, detalles, unidades, imagen, eliminado) 
-                   VALUES ('{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}', 0)";
+                VALUES ('{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}', 0)";
+
 
     if ($link->query($sql_insert)) {
         // Si la inserción fue exitosa, mostrar resumen de datos insertados

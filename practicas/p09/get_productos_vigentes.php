@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+"http://www.w3.org/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -10,31 +10,23 @@
     <h3>PRODUCTOS</h3>
 
     <?php
-    if (isset($_GET['tope'])) {
-        $tope = $_GET['tope'];
+    @$link = new mysqli('localhost', 'root', '12345678a', 'marketzone');
 
-        if (!empty($tope) && is_numeric($tope)) {
-
-            @$link = new mysqli('localhost', 'root', '12345678a', 'marketzone');
-            if ($link->connect_errno) {
-                die('Falló la conexión: '.$link->connect_error.'<br/>');
-            }
-
-            // Establecer el conjunto de caracteres UTF-8
-            $link->set_charset("utf8");
-
-            if ($result = $link->query("SELECT * FROM productos WHERE unidades <= $tope")) {
-                $rows = $result->fetch_all(MYSQLI_ASSOC);
-                $result->free();
-            }
-
-            $link->close();
-        } else {
-            echo '<p>El parámetro "tope" debe ser un número válido.</p>';
-        }
-    } else {
-        echo '<p>Parámetro "tope" no detectado...</p>';
+    /** Comprobar la conexión */
+    if ($link->connect_errno) {
+        die('Falló la conexión: '.$link->connect_error.'<br/>');
     }
+
+    // Establecer el conjunto de caracteres UTF-8
+    $link->set_charset("utf8");
+
+    // Consulta para obtener productos que no están eliminados
+    if ($result = $link->query("SELECT * FROM productos WHERE eliminado = 0")) {
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        $result->free();
+    }
+
+    $link->close();
     ?>
 
     <?php if (isset($rows) && !empty($rows)) : ?>
@@ -66,8 +58,8 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-    <?php elseif (isset($tope)) : ?>
-        <p>No se encontraron productos con unidades menores o iguales a <?= htmlspecialchars($tope, ENT_QUOTES, 'UTF-8') ?>.</p>
+    <?php else : ?>
+        <p>No se encontraron productos que no estén eliminados.</p>
     <?php endif; ?>
 </body>
 </html>
