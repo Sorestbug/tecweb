@@ -145,9 +145,59 @@ function ejercicio9() {
     }
 }
 
+function ejercicio10() {
+    var x = 1;
+    var resultado = '';
+    
+    while (x <= 100) {
+        resultado += x + '<br>';
+        x = x + 1;
+    }
+    
+    document.getElementById("div10").innerHTML = resultado;
+}
 
+function ejercicio11() {
+    var x = 1;
+    var suma = 0;
+    var valor;
 
+    while (x <= 5) {
+        valor = prompt('Ingresa el valor:', '');
+        valor = parseInt(valor);
+        suma += valor;
+        x++;
+    }
 
+    document.getElementById("div11").innerHTML = "La suma de los valores es " + suma + "<br>";
+}
 
+function ejercicio12() {
+    var valor;
+
+    do {
+        valor = prompt('Ingresa un valor entre 0 y 999:', '');
+        valor = parseInt(valor);
+        document.getElementById("div12").innerHTML += 'El valor ' + valor + ' tiene ';
+        
+        if (valor < 10) {
+            document.getElementById("div12").innerHTML += '1 dígito<br>';
+        } else if (valor < 100) {
+            document.getElementById("div12").innerHTML += '2 dígitos<br>';
+        } else if (valor < 1000) {
+            document.getElementById("div12").innerHTML += '3 dígitos<br>';
+        }
+    } while (valor !== 0);
+}
+
+function ejercicio13() {
+    var resultado = '';
+    
+    for (var f = 1; f <= 10; f++) {
+        resultado += f + " ";
+    }
+
+    document.getElementById("div13").innerHTML = resultado;
+}
 
 
