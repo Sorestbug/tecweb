@@ -115,7 +115,7 @@
 <h2>Modificar Producto</h2>
 
 
-<form action="set_producto_v2.php" method="post" onsubmit="return validarFormulario()">
+<form action="http://localhost/tecweb/practicas/p10/update_producto.php" method="post" onsubmit="return validarFormulario()">
     <label for="id">ID del Producto:</label>
     <input type="text" id="id" name="id" value="<?= !empty($_POST['id']) ? htmlspecialchars($_POST['id'], ENT_QUOTES, 'UTF-8') : (isset($_GET['id']) ? htmlspecialchars($_GET['id'], ENT_QUOTES, 'UTF-8') : '') ?>" readonly>
 
