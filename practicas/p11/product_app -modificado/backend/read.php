@@ -1,28 +1,27 @@
 <?php
     include_once __DIR__.'/database.php';
 
-    $data = array(); // Arreglo para devolver el JSON
-    
-    if( isset($_POST['search_term']) ) { // Se verifica el dato
-        $search_term = $_POST['search_term'];
-        $search_term = $conexion->real_escape_string($search_term); // Se escapa el dato para evitar la inyeccion de SQL
+    // ARREGLO PARA DEVOLVER LOS DATOS EN JSON
+    $data = array();
+
+    // SE VERIFICA SI SE RECIBIÓ UN TÉRMINO DE BÚSQUEDA
+    if( isset($_POST['search']) ) {
+        $search = $_POST['search'];
         
-        // Query usando LIKE
-        $query = " 
-            SELECT * 
-            FROM productos 
-            WHERE nombre LIKE '%{$search_term}%' 
-               OR marca LIKE '%{$search_term}%' 
-               OR detalles LIKE '%{$search_term}%'
-        ";
+        // SE REALIZA LA CONSULTA UTILIZANDO LIKE PARA BUSCAR COINCIDENCIAS
+        $query = "SELECT * FROM productos 
+                  WHERE nombre LIKE '%{$search}%' 
+                  OR marca LIKE '%{$search}%' 
+                  OR detalles LIKE '%{$search}%'";
         
-        if ( $result = $conexion->query($query) ) {  // Obtener los resultados
-            while($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $producto = array();
+        if ($result = $conexion->query($query)) {
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                // SE CODIFICAN A UTF-8 LOS DATOS
                 foreach($row as $key => $value) {
-                    $producto[$key] = utf8_encode($value);
+                    $row[$key] = utf8_encode($value);
                 }
-                $data[] = $producto;
+                // SE AGREGA CADA PRODUCTO AL ARREGLO
+                $data[] = $row;
             }
             $result->free();
         } else {
@@ -30,7 +29,7 @@
         }
         $conexion->close();
     }
-
     
-    echo json_encode($data, JSON_PRETTY_PRINT); // Se convierte a JSON
+    // SE ENVÍA LA RESPUESTA EN FORMATO JSON
+    echo json_encode($data, JSON_PRETTY_PRINT);
 ?>

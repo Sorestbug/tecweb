@@ -9,75 +9,35 @@ var baseJSON = {
 };
 
 // FUNCIÓN CALLBACK DE BOTÓN "Buscar"
-function buscarID(e) {
-    e.preventDefault();
-
-    // SE OBTIENE EL ID A BUSCAR
-    var id = document.getElementById('search').value;
-
-    // SE CREA EL OBJETO DE CONEXIÓN ASÍNCRONA AL SERVIDOR
-    var client = getXMLHttpRequest();
-    client.open('POST', './backend/read.php', true);
-    client.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    client.onreadystatechange = function () {
-        // SE VERIFICA SI LA RESPUESTA ESTÁ LISTA Y FUE SATISFACTORIA
-        if (client.readyState == 4 && client.status == 200) {
-            console.log('[CLIENTE]\n'+client.responseText);
-            
-            let productos = JSON.parse(client.responseText);
-            
-            if(Object.keys(productos).length > 0) {
-                let descripcion = '';
-                descripcion += '<li>precio: '+productos.precio+'</li>';
-                descripcion += '<li>unidades: '+productos.unidades+'</li>';
-                descripcion += '<li>modelo: '+productos.modelo+'</li>';
-                descripcion += '<li>marca: '+productos.marca+'</li>';
-                descripcion += '<li>detalles: '+productos.detalles+'</li>';
-                
-                let template = '';
-                template += `
-                    <tr>
-                        <td>${productos.id}</td>
-                        <td>${productos.nombre}</td>
-                        <td><ul>${descripcion}</ul></td>
-                    </tr>
-                `;
-                document.getElementById("productos").innerHTML = template;
-            }
-        }
-    };
-    client.send("id="+id);
-}
-
-// FUNCIÓN CALLBACK DE BOTÓN "Buscar Producto"
 function buscarProducto(e) {
-    e.preventDefault();
+    e.preventDefault();  // Evita que el formulario recargue la página
 
-    // SE OBTIENE EL TÉRMINO A BUSCAR
-    var search_term = document.getElementById('search').value;
+    var searchQuery = document.getElementById('search').value.trim();
 
-    // SE CREA EL OBJETO DE CONEXIÓN ASÍNCRONA AL SERVIDOR
+    if (searchQuery === "") {
+        alert("Por favor ingresa un término de búsqueda.");
+        return;
+    }
+
     var client = getXMLHttpRequest();
     client.open('POST', './backend/read.php', true);
     client.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     client.onreadystatechange = function () {
-        // SE VERIFICA SI LA RESPUESTA ESTÁ LISTA Y FUE SATISFACTORIA
         if (client.readyState == 4 && client.status == 200) {
-            console.log('[CLIENTE]\n'+client.responseText);
-            
+            console.log('[CLIENTE]\n' + client.responseText);
             let productos = JSON.parse(client.responseText);
 
             if (productos.length > 0) {
                 let template = '';
-                
-                productos.forEach(producto => {
-                    let descripcion = '';
-                    descripcion += '<li>precio: '+producto.precio+'</li>';
-                    descripcion += '<li>unidades: '+producto.unidades+'</li>';
-                    descripcion += '<li>modelo: '+producto.modelo+'</li>';
-                    descripcion += '<li>marca: '+producto.marca+'</li>';
-                    descripcion += '<li>detalles: '+producto.detalles+'</li>';
-                    
+                productos.forEach(function (producto) {
+                    let descripcion = `
+                        <li>precio: ${producto.precio}</li>
+                        <li>unidades: ${producto.unidades}</li>
+                        <li>modelo: ${producto.modelo}</li>
+                        <li>marca: ${producto.marca}</li>
+                        <li>detalles: ${producto.detalles}</li>
+                    `;
+
                     template += `
                         <tr>
                             <td>${producto.id}</td>
@@ -86,24 +46,29 @@ function buscarProducto(e) {
                         </tr>
                     `;
                 });
-
                 document.getElementById("productos").innerHTML = template;
             } else {
                 document.getElementById("productos").innerHTML = '<tr><td colspan="3">No se encontraron productos.</td></tr>';
             }
         }
     };
-    client.send("search_term=" + search_term);
+
+    client.send("search=" + encodeURIComponent(searchQuery));
 }
 
-// FUNCIÓN CALLBACK DE BOTÓN "Agregar Producto"
+// FUNCIÓN PARA AGREGAR PRODUCTO
 function agregarProducto(e) {
     e.preventDefault();
 
+    if (!validarFormulario()) {
+        return;
+    }
+
+    // SE OBTIENE DESDE EL FORMULARIO EL JSON A ENVIAR
     var productoJsonString = document.getElementById('description').value;
     var finalJSON = JSON.parse(productoJsonString);
     finalJSON['nombre'] = document.getElementById('name').value;
-    productoJsonString = JSON.stringify(finalJSON,null,2);
+    productoJsonString = JSON.stringify(finalJSON, null, 2);
 
     var client = getXMLHttpRequest();
     client.open('POST', './backend/create.php', true);
@@ -114,6 +79,66 @@ function agregarProducto(e) {
         }
     };
     client.send(productoJsonString);
+}
+
+// VALIDACIONES DEL FORMULARIO
+function validarNombre() {
+    const nombre = document.getElementById("name").value.trim();
+    if (nombre === "" || nombre.length > 100) {
+        alert("El nombre es requerido y debe tener 100 caracteres o menos.");
+        return false;
+    }
+    return true;
+}
+
+function validarModelo() {
+    const modelo = document.getElementById("modelo").value.trim();
+    const modeloRegex = /^[a-zA-Z0-9]+$/;
+    if (!modeloRegex.test(modelo) || modelo.length > 25) {
+        alert("El modelo es requerido, debe ser alfanumérico y tener 25 caracteres o menos.");
+        return false;
+    }
+    return true;
+}
+
+function validarPrecio() {
+    const precio = parseFloat(document.getElementById("precio").value);
+    if (isNaN(precio) || precio <= 99.99) {
+        alert("El precio debe ser mayor a 99.99.");
+        return false;
+    }
+    return true;
+}
+
+function validarDetalles() {
+    const detalles = document.getElementById("detalles").value.trim();
+    if (detalles.length > 250) {
+        alert("Los detalles pueden tener hasta 250 caracteres.");
+        return false;
+    }
+    return true;
+}
+
+function validarUnidades() {
+    const unidades = parseInt(document.getElementById("unidades").value);
+    if (isNaN(unidades) || unidades < 0) {
+        alert("Las unidades son requeridas y deben ser un número mayor o igual a 0.");
+        return false;
+    }
+    return true;
+}
+
+function validarImagen() {
+    const imagen = document.getElementById("imagen").value.trim();
+    if (imagen === "") {
+        document.getElementById("imagen").value = './img/default.png';
+    }
+    return true;
+}
+
+function validarFormulario() {
+    return validarNombre() && validarModelo() && validarPrecio() &&
+           validarDetalles() && validarUnidades() && validarImagen();
 }
 
 // SE CREA EL OBJETO DE CONEXIÓN COMPATIBLE CON EL NAVEGADOR
@@ -137,6 +162,6 @@ function getXMLHttpRequest() {
 }
 
 function init() {
-    var JsonString = JSON.stringify(baseJSON,null,2);
+    var JsonString = JSON.stringify(baseJSON, null, 2);
     document.getElementById("description").value = JsonString;
 }
