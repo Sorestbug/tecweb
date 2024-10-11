@@ -64,22 +64,33 @@ function agregarProducto(e) {
         return;
     }
 
-    // SE OBTIENE DESDE EL FORMULARIO EL JSON A ENVIAR
-    var productoJsonString = document.getElementById('description').value;
-    var finalJSON = JSON.parse(productoJsonString);
-    finalJSON['nombre'] = document.getElementById('name').value;
-    productoJsonString = JSON.stringify(finalJSON, null, 2);
+    // Crea un objeto finalJSON con todos los datos del formulario
+    var finalJSON = {
+        nombre: document.getElementById('name').value,
+        modelo: document.getElementById('modelo').value,
+        precio: parseFloat(document.getElementById('precio').value),
+        unidades: parseInt(document.getElementById('unidades').value),
+        marca: document.getElementById('marca').value,
+        detalles: document.getElementById('detalles').value,
+        imagen: document.getElementById('imagen').value || './img/default.png' // Usa valor por defecto si está vacío
+    };
+
+    // Convierte el objeto a JSON
+    var productoJsonString = JSON.stringify(finalJSON, null, 2);
 
     var client = getXMLHttpRequest();
     client.open('POST', './backend/create.php', true);
     client.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
     client.onreadystatechange = function () {
-        if (client.readyState == 4 && client.status == 200) {
-            console.log(client.responseText);
+        if (client.readyState == 4) {
+            // Mostrar el mensaje del servidor
+            alert(client.responseText);
         }
     };
     client.send(productoJsonString);
 }
+
+
 
 // VALIDACIONES DEL FORMULARIO
 function validarNombre() {
