@@ -117,6 +117,11 @@ $('#add-product-form').on('submit', function(e) {
     console.log(finalJSON); // Verificar el JSON antes de validar
 
     // Validaciones
+    if (!finalJSON['nombre'] || finalJSON['nombre'].trim() === "") { // Validación para nombre nulo o vacío
+        alert("El nombre no puede ser nulo o vacío.");
+        return;
+    }
+
     if (finalJSON['nombre'].length > 100) {
         alert("El nombre debe tener menos de 100 caracteres.");
         return;
