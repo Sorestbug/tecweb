@@ -2,13 +2,14 @@
 var baseJSON = {
     "precio": 0.0,
     "unidades": 1,
-    "modelo": "XX-000",
+    "modelo": "XX000",
     "marca": "NA",
     "detalles": "NA",
-    "imagen": "img/default.png"
+    "imagen": "./img/default.png"
 };
 
 function init() {
+    console.log("Init function called"); // Verifica si la función se llama
     var JsonString = JSON.stringify(baseJSON, null, 2);
     $('#description').val(JsonString);
 
@@ -100,13 +101,52 @@ $('#search').on('keyup', function() {
     });
 });
 
-// Función para agregar un nuevo producto
+// Función para agregar un nuevo producto con validaciones
 $('#add-product-form').on('submit', function(e) {
     e.preventDefault();
 
     let productoJsonString = $('#description').val();
+    if (!productoJsonString) {
+        alert("El campo de descripción está vacío.");
+        return;
+    }
+
     let finalJSON = JSON.parse(productoJsonString);
     finalJSON['nombre'] = $('#name').val();
+
+    console.log(finalJSON); // Verificar el JSON antes de validar
+
+    // Validaciones
+    if (finalJSON['nombre'].length > 100) {
+        alert("El nombre debe tener menos de 100 caracteres.");
+        return;
+    }
+
+    if (!/^[a-zA-Z0-9-]+$/.test(finalJSON['modelo']) || finalJSON['modelo'].length > 25) {
+        alert("El modelo debe ser alfanumérico y tener menos de 25 caracteres.");
+        return;
+    }
+
+    if (finalJSON['precio'] <= 99.99) {
+        alert("El precio debe ser mayor a 99.99.");
+        return;
+    }
+
+    if (finalJSON['detalles'].length > 250) {
+        alert("Los detalles pueden tener hasta 250 caracteres.");
+        return;
+    }
+
+    if (finalJSON['unidades'] < 0) {
+        alert("Las unidades deben ser mayores o iguales a 0.");
+        return;
+    }
+
+    if (!finalJSON['imagen']) {
+        finalJSON['imagen'] = './img/default.png';  // Si no se proporciona una imagen, se usa la predeterminada
+    }
+
+    console.log("Validaciones pasadas");  // Indicar que las validaciones fueron exitosas
 
     $.ajax({
         url: './backend/product-add.php',
