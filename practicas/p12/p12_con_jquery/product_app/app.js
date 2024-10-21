@@ -1,8 +1,8 @@
 // JSON BASE A MOSTRAR EN FORMULARIO
 var baseJSON = {
-    "precio": 100.0,
+    "precio": 0.0,
     "unidades": 1,
-    "modelo": "XX123",
+    "modelo": "XX-000",
     "marca": "NA",
     "detalles": "NA",
     "imagen": "./img/default.png"
@@ -101,7 +101,7 @@ $('#search').on('keyup', function() {
     });
 });
 
-// Función para agregar un nuevo producto con validaciones
+// Función para agregar un nuevo producto 
 $('#add-product-form').on('submit', function(e) {
     e.preventDefault();
 
@@ -188,7 +188,9 @@ function eliminarProducto(id) {
             url: './backend/product-delete.php',
             type: 'GET',
             data: { id: id },
+            dataType: 'json', // Asegúrate de especificar el tipo de dato esperado
             success: function(respuesta) {
+                console.log(respuesta); // Añadir esta línea para ver la respuesta
                 let template_bar = `
                     <li>status: ${respuesta.status}</li>
                     <li>message: ${respuesta.message}</li>
@@ -199,10 +201,15 @@ function eliminarProducto(id) {
 
                 // Recargar la lista de productos
                 listarProductos();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la solicitud:", error); // Para ver errores
+                alert("Ocurrió un error al eliminar el producto.");
             }
         });
     }
 }
+
 
 // Inicializar la aplicación al cargar la página
 $(document).ready(function() {
