@@ -1,8 +1,8 @@
 // JSON BASE A MOSTRAR EN FORMULARIO
 var baseJSON = {
-    "precio": 0.0,
+    "precio": 100.0,
     "unidades": 1,
-    "modelo": "XX000",
+    "modelo": "XX123",
     "marca": "NA",
     "detalles": "NA",
     "imagen": "./img/default.png"
@@ -114,7 +114,7 @@ $('#add-product-form').on('submit', function(e) {
     let finalJSON = JSON.parse(productoJsonString);
     finalJSON['nombre'] = $('#name').val();
 
-    console.log(finalJSON); // Verificar el JSON antes de validar
+    //console.log(finalJSON); // Verificar el JSON antes de validar
 
     // Validaciones
     if (!finalJSON['nombre'] || finalJSON['nombre'].trim() === "") { // Validación para nombre nulo o vacío
@@ -151,7 +151,7 @@ $('#add-product-form').on('submit', function(e) {
         finalJSON['imagen'] = './img/default.png';  // Si no se proporciona una imagen, se usa la predeterminada
     }
 
-    console.log("Validaciones pasadas");  // Indicar que las validaciones fueron exitosas
+    //console.log("Validaciones pasadas");  
 
     $.ajax({
         url: './backend/product-add.php',
@@ -159,18 +159,26 @@ $('#add-product-form').on('submit', function(e) {
         contentType: 'application/json',
         data: JSON.stringify(finalJSON),
         success: function(respuesta) {
+            console.log(respuesta); // Agregado para verificar la respuesta
             let template_bar = `
                 <li>status: ${respuesta.status}</li>
                 <li>message: ${respuesta.message}</li>
             `;
-
+    
             $('#product-result').addClass('d-block');
             $('#container').html(template_bar);
-
+    
             // Recargar la lista de productos
             listarProductos();
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la llamada AJAX:", error);
+            $('#container').html("<li>Error en la solicitud. Por favor, intenta nuevamente.</li>");
         }
     });
+    
+
+
 });
 
 // Función para eliminar un producto
