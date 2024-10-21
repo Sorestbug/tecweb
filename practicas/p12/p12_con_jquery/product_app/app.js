@@ -35,11 +35,10 @@ function listarProductos() {
                         <li>marca: ${producto.marca}</li>
                         <li>detalles: ${producto.detalles}</li>
                     `;
-
+                
                     template += `
                         <tr productId="${producto.id}">
-                            <td>${producto.id}</td>
-                            <td>${producto.nombre}</td>
+                            <td><a href="#" onclick="cargarProducto('${producto.nombre}')">${producto.nombre}</a></td>
                             <td><ul>${descripcion}</ul></td>
                             <td>
                                 <button class="product-delete btn btn-danger" onclick="eliminarProducto(${producto.id})">
@@ -49,11 +48,52 @@ function listarProductos() {
                         </tr>
                     `;
                 });
+                
                 $('#products').html(template);
+
+                // Agregar el evento click para cargar datos en el formulario
+                $('.product-name').on('click', function() {
+                    const productId = $(this).data('id');
+                    cargarProducto(productId);
+                });
             }
         }
     });
 }
+
+// Función para cargar los datos de un producto específico cuando se hace clic en su nombre
+function cargarProducto(nombre) {
+    $.ajax({
+        url: `./backend/product-get.php?nombre=${encodeURIComponent(nombre)}`,
+        type: 'GET',
+        dataType: 'json',
+        success: function(respuesta) {
+            if (respuesta.status === 'success') {
+                // Cargar datos en el JSON
+                let producto = respuesta.producto;
+                let baseJSON = {
+                    "precio": producto.precio,
+                    "unidades": producto.unidades,
+                    "modelo": producto.modelo,
+                    "marca": producto.marca,
+                    "detalles": producto.detalles,
+                    "imagen": producto.imagen || './img/default.png', // Imagen por defecto si no hay
+                    "nombre": producto.nombre
+                };
+
+                // Actualizar el campo de descripción
+                $('#description').val(JSON.stringify(baseJSON, null, 2));
+                $('#name').val(producto.nombre); // Cargar el nombre en el campo correspondiente
+            } else {
+                alert(respuesta.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error al cargar el producto:", error);
+        }
+    });
+}
+
 
 // Función para buscar productos según lo que se vaya tecleando en el campo de búsqueda
 $('#search').on('keyup', function() {
@@ -79,8 +119,8 @@ $('#search').on('keyup', function() {
 
                     template += `
                         <tr productId="${producto.id}">
+                            <td><a href="#" class="product-name" data-id="${producto.id}">${producto.nombre}</a></td>
                             <td>${producto.id}</td>
-                            <td>${producto.nombre}</td>
                             <td><ul>${descripcion}</ul></td>
                             <td>
                                 <button class="product-delete btn btn-danger" onclick="eliminarProducto(${producto.id})">
@@ -96,6 +136,12 @@ $('#search').on('keyup', function() {
                 $('#products').html(template);
                 $('#container').html(template_bar);
                 $('#product-result').addClass('d-block');
+
+                // Re-agregar el evento click para cargar datos en el formulario
+                $('.product-name').on('click', function() {
+                    const productId = $(this).data('id');
+                    cargarProducto(productId);
+                });
             }
         }
     });
@@ -113,8 +159,6 @@ $('#add-product-form').on('submit', function(e) {
 
     let finalJSON = JSON.parse(productoJsonString);
     finalJSON['nombre'] = $('#name').val();
-
-    //console.log(finalJSON); // Verificar el JSON antes de validar
 
     // Validaciones
     if (!finalJSON['nombre'] || finalJSON['nombre'].trim() === "") { // Validación para nombre nulo o vacío
@@ -151,8 +195,6 @@ $('#add-product-form').on('submit', function(e) {
         finalJSON['imagen'] = './img/default.png';  // Si no se proporciona una imagen, se usa la predeterminada
     }
 
-    //console.log("Validaciones pasadas");  
-
     $.ajax({
         url: './backend/product-add.php',
         type: 'POST',
@@ -164,10 +206,10 @@ $('#add-product-form').on('submit', function(e) {
                 <li>status: ${respuesta.status}</li>
                 <li>message: ${respuesta.message}</li>
             `;
-    
+
             $('#product-result').addClass('d-block');
             $('#container').html(template_bar);
-    
+
             // Recargar la lista de productos
             listarProductos();
         },
@@ -176,9 +218,6 @@ $('#add-product-form').on('submit', function(e) {
             $('#container').html("<li>Error en la solicitud. Por favor, intenta nuevamente.</li>");
         }
     });
-    
-
-
 });
 
 // Función para eliminar un producto
@@ -209,7 +248,6 @@ function eliminarProducto(id) {
         });
     }
 }
-
 
 // Inicializar la aplicación al cargar la página
 $(document).ready(function() {
