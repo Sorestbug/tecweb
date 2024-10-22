@@ -69,7 +69,6 @@ function cargarProducto(nombre) {
         dataType: 'json',
         success: function(respuesta) {
             if (respuesta.status === 'success') {
-                // Cargar datos en el JSON
                 let producto = respuesta.producto;
                 let baseJSON = {
                     "precio": producto.precio,
@@ -77,13 +76,16 @@ function cargarProducto(nombre) {
                     "modelo": producto.modelo,
                     "marca": producto.marca,
                     "detalles": producto.detalles,
-                    "imagen": producto.imagen || './img/default.png', // Imagen por defecto si no hay
+                    "imagen": producto.imagen || './img/default.png',
                     "nombre": producto.nombre
                 };
 
-                // Actualizar el campo de descripción
+                // Cargar los datos en los campos
                 $('#description').val(JSON.stringify(baseJSON, null, 2));
-                $('#name').val(producto.nombre); // Cargar el nombre en el campo correspondiente
+                $('#name').val(producto.nombre); 
+
+                // Marcar el producto como existente añadiendo un campo oculto
+                $('#product-id').val(producto.id);  // Añade un campo oculto para el ID del producto
             } else {
                 alert(respuesta.message);
             }
@@ -160,48 +162,20 @@ $('#add-product-form').on('submit', function(e) {
     let finalJSON = JSON.parse(productoJsonString);
     finalJSON['nombre'] = $('#name').val();
 
-    // Validaciones
-    if (!finalJSON['nombre'] || finalJSON['nombre'].trim() === "") { // Validación para nombre nulo o vacío
-        alert("El nombre no puede ser nulo o vacío.");
-        return;
+    let productId = $('#product-id').val(); // Obtener el ID del producto
+    if (productId) {
+        finalJSON['id'] = productId; // Asegurarse de añadir el ID al JSON si es un producto existente
     }
 
-    if (finalJSON['nombre'].length > 100) {
-        alert("El nombre debe tener menos de 100 caracteres.");
-        return;
-    }
-
-    if (!/^[a-zA-Z0-9-]+$/.test(finalJSON['modelo']) || finalJSON['modelo'].length > 25) {
-        alert("El modelo debe ser alfanumérico y tener menos de 25 caracteres.");
-        return;
-    }
-
-    if (finalJSON['precio'] <= 99.99) {
-        alert("El precio debe ser mayor a 99.99.");
-        return;
-    }
-
-    if (finalJSON['detalles'].length > 250) {
-        alert("Los detalles pueden tener hasta 250 caracteres.");
-        return;
-    }
-
-    if (finalJSON['unidades'] < 0) {
-        alert("Las unidades deben ser mayores o iguales a 0.");
-        return;
-    }
-
-    if (!finalJSON['imagen']) {
-        finalJSON['imagen'] = './img/default.png';  // Si no se proporciona una imagen, se usa la predeterminada
-    }
+    // Detectar si el producto ya existe
+    let url = productId ? './backend/product-update.php' : './backend/product-add.php';
 
     $.ajax({
-        url: './backend/product-add.php',
+        url: url,
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(finalJSON),
+        data: JSON.stringify(finalJSON), // Asegúrate de que el JSON incluye el ID
         success: function(respuesta) {
-            console.log(respuesta); // Agregado para verificar la respuesta
             let template_bar = `
                 <li>status: ${respuesta.status}</li>
                 <li>message: ${respuesta.message}</li>
@@ -212,6 +186,11 @@ $('#add-product-form').on('submit', function(e) {
 
             // Recargar la lista de productos
             listarProductos();
+
+            // Limpiar el formulario después de agregar/actualizar
+            $('#description').val('');
+            $('#name').val('');
+            $('#product-id').val(''); // Limpiar el campo oculto
         },
         error: function(xhr, status, error) {
             console.error("Error en la llamada AJAX:", error);
@@ -219,6 +198,7 @@ $('#add-product-form').on('submit', function(e) {
         }
     });
 });
+
 
 // Función para eliminar un producto
 function eliminarProducto(id) {
