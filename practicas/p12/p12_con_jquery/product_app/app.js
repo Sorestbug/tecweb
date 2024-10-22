@@ -9,16 +9,14 @@ var baseJSON = {
 };
 
 function init() {
-    console.log("Init function called"); // Verifica si la función se llama
+    //console.log("Init function called"); 
     var JsonString = JSON.stringify(baseJSON, null, 2);
     $('#description').val(JsonString);
-
-    // Cargar la lista de productos al iniciar la página
-    listarProductos();
+    listarProductos(); // Cargar la lista de productos al iniciar la página
 }
 
-// Función para cargar todos los productos no eliminados
-function listarProductos() {
+
+function listarProductos() { // Función para cargar todos los productos no eliminados
     $.ajax({
         url: './backend/product-list.php',
         type: 'GET',
@@ -51,8 +49,8 @@ function listarProductos() {
                 
                 $('#products').html(template);
 
-                // Agregar el evento click para cargar datos en el formulario
-                $('.product-name').on('click', function() {
+               
+                $('.product-name').on('click', function() {  // Cargar datos en el formulario
                     const productId = $(this).data('id');
                     cargarProducto(productId);
                 });
@@ -61,8 +59,8 @@ function listarProductos() {
     });
 }
 
-// Función para cargar los datos de un producto específico cuando se hace clic en su nombre
-function cargarProducto(nombre) {
+
+function cargarProducto(nombre) { // Función para cargar los datos de un producto 
     $.ajax({
         url: `./backend/product-get.php?nombre=${encodeURIComponent(nombre)}`,
         type: 'GET',
@@ -83,9 +81,7 @@ function cargarProducto(nombre) {
                 // Cargar los datos en los campos
                 $('#description').val(JSON.stringify(baseJSON, null, 2));
                 $('#name').val(producto.nombre); 
-
-                // Marcar el producto como existente añadiendo un campo oculto
-                $('#product-id').val(producto.id);  // Añade un campo oculto para el ID del producto
+                $('#product-id').val(producto.id);  
             } else {
                 alert(respuesta.message);
             }
@@ -97,7 +93,7 @@ function cargarProducto(nombre) {
 }
 
 
-// Función para buscar productos según lo que se vaya tecleando en el campo de búsqueda
+// Función para buscar productos según lo que se vaya tecleando
 $('#search').on('keyup', function() {
     let search = $(this).val();
     $.ajax({
@@ -138,8 +134,6 @@ $('#search').on('keyup', function() {
                 $('#products').html(template);
                 $('#container').html(template_bar);
                 $('#product-result').addClass('d-block');
-
-                // Re-agregar el evento click para cargar datos en el formulario
                 $('.product-name').on('click', function() {
                     const productId = $(this).data('id');
                     cargarProducto(productId);
@@ -174,7 +168,7 @@ $('#add-product-form').on('submit', function(e) {
         url: url,
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(finalJSON), // Asegúrate de que el JSON incluye el ID
+        data: JSON.stringify(finalJSON), 
         success: function(respuesta) {
             let template_bar = `
                 <li>status: ${respuesta.status}</li>
@@ -190,7 +184,7 @@ $('#add-product-form').on('submit', function(e) {
             // Limpiar el formulario después de agregar/actualizar
             $('#description').val('');
             $('#name').val('');
-            $('#product-id').val(''); // Limpiar el campo oculto
+            $('#product-id').val(''); 
         },
         error: function(xhr, status, error) {
             console.error("Error en la llamada AJAX:", error);
@@ -198,6 +192,7 @@ $('#add-product-form').on('submit', function(e) {
         }
     });
 });
+
 
 
 // Función para eliminar un producto
@@ -217,12 +212,10 @@ function eliminarProducto(id) {
 
                 $('#product-result').addClass('d-block');
                 $('#container').html(template_bar);
-
-                // Recargar la lista de productos
-                listarProductos();
+                listarProductos();  // Recargar la lista de productos
             },
             error: function(xhr, status, error) {
-                console.error("Error en la solicitud:", error); // Para ver errores
+                console.error("Error en la solicitud:", error); 
                 alert("Ocurrió un error al eliminar el producto.");
             }
         });
