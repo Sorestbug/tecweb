@@ -8,10 +8,104 @@ var baseJSON = {
     "imagen": "./img/default.png"
 };
 
-$(document).ready(function(){
+$(document).ready(function() {
     let edit = false;
     $('#product-result').hide();
     listarProductos();
+
+    // Validaciones
+    function validarNombre() {
+        const nombre = $('#name').val();
+        if (nombre.trim() === "") {
+            $('#name-status').text('El nombre es requerido.').css('color', 'red');
+            return false;
+        } else if (nombre.length > 100) {
+            $('#name-status').text('El nombre debe tener 100 caracteres o menos.').css('color', 'red');
+            return false;
+        } else {
+            $('#name-status').text('¡Bien!').css('color', 'green');
+            return true;
+        }
+    }
+
+    function validarMarca() {
+        const marca = $('#marca').val();
+        if (marca.trim() === "") {
+            $('#marca-status').text('La marca es requerida.').css('color', 'red');
+            return false;
+        } else {
+            $('#marca-status').text('¡Bien!').css('color', 'green');
+            return true;
+        }
+    }
+
+    function validarModelo() {
+        const modelo = $('#modelo').val();
+        const modeloRegex = /^[a-zA-Z0-9]+$/; // Alfanumérico
+        if (modelo.trim() === "") {
+            $('#modelo-status').text('El modelo es requerido.').css('color', 'red');
+            return false;
+        } else if (modelo.length > 25 || !modeloRegex.test(modelo)) {
+            $('#modelo-status').text('El modelo debe ser alfanumérico y tener 25 caracteres o menos.').css('color', 'red');
+            return false;
+        } else {
+            $('#modelo-status').text('¡Bien!').css('color', 'green');
+            return true;
+        }
+    }
+
+    function validarPrecio() {
+        const precio = parseFloat($('#precio').val());
+        if (isNaN(precio) || precio <= 99.99) {
+            $('#precio-status').text('El precio es requerido y debe ser mayor a 99.99.').css('color', 'red');
+            return false;
+        } else {
+            $('#precio-status').text('¡Bien!').css('color', 'green');
+            return true;
+        }
+    }
+
+    function validarUnidades() {
+        const unidades = parseInt($('#unidades').val());
+        if (isNaN(unidades) || unidades < 0) {
+            $('#unidades-status').text('Las unidades son requeridas y deben ser mayor o igual a 0.').css('color', 'red');
+            return false;
+        } else {
+            $('#unidades-status').text('¡Bien!').css('color', 'green');
+            return true;
+        }
+    }
+
+    function validarDetalles() {
+        const detalles = $('#detalles').val();
+        if (detalles.length > 250) {
+            $('#detalles-status').text('Los detalles deben tener 250 caracteres o menos.').css('color', 'red');
+            return false;
+        } else {
+            $('#detalles-status').text('¡Bien!').css('color', 'green');
+            return true;
+        }
+    }
+
+    function validarImagen() {
+        const imagen = $('#imagen').val();
+        if (imagen.trim() === "") {
+            $('#imagen-status').text('Usando imagen por defecto.').css('color', 'orange');
+            return true;
+        } else {
+            $('#imagen-status').text('¡Bien!').css('color', 'green');
+            return true;
+        }
+    }
+
+    // Evento focusout para validar al cambiar de campo
+    $('#name').focusout(validarNombre);
+    $('#marca').focusout(validarMarca);
+    $('#modelo').focusout(validarModelo);
+    $('#precio').focusout(validarPrecio);
+    $('#unidades').focusout(validarUnidades);
+    $('#detalles').focusout(validarDetalles);
+    $('#imagen').focusout(validarImagen);
 
     function listarProductos() {
         $.ajax({
@@ -20,24 +114,24 @@ $(document).ready(function(){
             success: function(response) {
                 const productos = JSON.parse(response);
 
-                if(Object.keys(productos).length > 0) {
+                if (Object.keys(productos).length > 0) {
                     let template = '';
 
                     productos.forEach(producto => {
                         let descripcion = '';
-                        descripcion += '<li>precio: '+producto.precio+'</li>';
-                        descripcion += '<li>unidades: '+producto.unidades+'</li>';
-                        descripcion += '<li>modelo: '+producto.modelo+'</li>';
-                        descripcion += '<li>marca: '+producto.marca+'</li>';
-                        descripcion += '<li>detalles: '+producto.detalles+'</li>';
-                    
+                        descripcion += '<li>precio: ' + producto.precio + '</li>';
+                        descripcion += '<li>unidades: ' + producto.unidades + '</li>';
+                        descripcion += '<li>modelo: ' + producto.modelo + '</li>';
+                        descripcion += '<li>marca: ' + producto.marca + '</li>';
+                        descripcion += '<li>detalles: ' + producto.detalles + '</li>';
+
                         template += `
                             <tr productId="${producto.id}">
                                 <td>${producto.id}</td>
                                 <td><a href="#" class="product-item">${producto.nombre}</a></td>
                                 <td><ul>${descripcion}</ul></td>
                                 <td>
-                                    <button class="product-delete btn btn-danger" onclick="eliminarProducto()">
+                                    <button class="product-delete btn btn-danger">
                                         Eliminar
                                     </button>
                                 </td>
@@ -51,28 +145,28 @@ $(document).ready(function(){
     }
 
     $('#search').keyup(function() {
-        if($('#search').val()) {
+        if ($('#search').val()) {
             let search = $('#search').val();
             $.ajax({
-                url: './backend/product-search.php?search='+$('#search').val(),
-                data: {search},
+                url: './backend/product-search.php?search=' + search,
+                data: { search },
                 type: 'GET',
-                success: function (response) {
-                    if(!response.error) {
+                success: function(response) {
+                    if (!response.error) {
                         const productos = JSON.parse(response);
-                        
-                        if(Object.keys(productos).length > 0) {
+
+                        if (Object.keys(productos).length > 0) {
                             let template = '';
                             let template_bar = '';
 
                             productos.forEach(producto => {
                                 let descripcion = '';
-                                descripcion += '<li>precio: '+producto.precio+'</li>';
-                                descripcion += '<li>unidades: '+producto.unidades+'</li>';
-                                descripcion += '<li>modelo: '+producto.modelo+'</li>';
-                                descripcion += '<li>marca: '+producto.marca+'</li>';
-                                descripcion += '<li>detalles: '+producto.detalles+'</li>';
-                            
+                                descripcion += '<li>precio: ' + producto.precio + '</li>';
+                                descripcion += '<li>unidades: ' + producto.unidades + '</li>';
+                                descripcion += '<li>modelo: ' + producto.modelo + '</li>';
+                                descripcion += '<li>marca: ' + producto.marca + '</li>';
+                                descripcion += '<li>detalles: ' + producto.detalles + '</li>';
+
                                 template += `
                                     <tr productId="${producto.id}">
                                         <td>${producto.id}</td>
@@ -92,13 +186,12 @@ $(document).ready(function(){
                             });
                             $('#product-result').show();
                             $('#container').html(template_bar);
-                            $('#products').html(template);    
+                            $('#products').html(template);
                         }
                     }
                 }
             });
-        }
-        else {
+        } else {
             $('#product-result').hide();
         }
     });
@@ -106,41 +199,48 @@ $(document).ready(function(){
     $('#product-form').submit(e => {
         e.preventDefault();
 
-        // Se crea el objeto JSON a partir de los valores de los campos de formulario
-        let postData = {
-            nombre: $('#name').val(),
-            id: $('#productId').val(),
-            precio: parseFloat($('#precio').val()) || 0.0,
-            unidades: parseInt($('#unidades').val()) || 1,
-            modelo: $('#modelo').val() || "XX-000",
-            marca: $('#marca').val() || "NA",
-            detalles: $('#detalles').val() || "NA",
-            imagen: $('#imagen').val() || "./img/default.png"
-        };
+        // Validar campos antes de agregar el producto
+        if (validarNombre() && validarMarca() && validarModelo() && validarPrecio() && validarUnidades() && validarDetalles() && validarImagen()) {
+            // Se crea el objeto JSON a partir de los valores de los campos de formulario
+            let postData = {
+                nombre: $('#name').val(),
+                id: $('#productId').val(),
+                precio: parseFloat($('#precio').val()) || 0.0,
+                unidades: parseInt($('#unidades').val()) || 1,
+                modelo: $('#modelo').val() || "XX-000",
+                marca: $('#marca').val() || "NA",
+                detalles: $('#detalles').val() || "NA",
+                imagen: $('#imagen').val() || "./img/default.png"
+            };
 
-        const url = edit === false ? './backend/product-add.php' : './backend/product-edit.php';
+            const url = edit === false ? './backend/product-add.php' : './backend/product-edit.php';
 
-        $.post(url, postData, (response) => {
-            let respuesta = JSON.parse(response);
-            let template_bar = `
-                <li style="list-style: none;">status: ${respuesta.status}</li>
-                <li style="list-style: none;">message: ${respuesta.message}</li>
-            `;
-            $('#product-result').show();
-            $('#container').html(template_bar);
-            listarProductos();
-            edit = false;
+            $.post(url, postData, (response) => {
+                let respuesta = JSON.parse(response);
+                let template_bar = `
+                    <li style="list-style: none;">status: ${respuesta.status}</li>
+                    <li style="list-style: none;">message: ${respuesta.message}</li>
+                `;
+                $('#product-result').show();
+                $('#container').html(template_bar);
+                listarProductos();
+                edit = false;
 
-            // Reinicia los campos del formulario
-            $('#product-form').trigger('reset');
-        });
+                // Reinicia los campos del formulario
+                $('#product-form').trigger('reset');
+                // Limpiar los estados de validación
+                $('.form-text').text('');
+            });
+        } else {
+            alert("Por favor corrige los errores en el formulario antes de enviar.");
+        }
     });
 
     $(document).on('click', '.product-delete', (e) => {
-        if(confirm('¿Realmente deseas eliminar el producto?')) {
-            const element = $(this)[0].activeElement.parentElement.parentElement;
+        if (confirm('¿Realmente deseas eliminar el producto?')) {
+            const element = $(e.target).closest('tr'); // Cambiado a e.target para obtener el botón correcto
             const id = $(element).attr('productId');
-            $.post('./backend/product-delete.php', {id}, (response) => {
+            $.post('./backend/product-delete.php', { id }, (response) => {
                 $('#product-result').hide();
                 listarProductos();
             });
@@ -148,23 +248,23 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '.product-item', (e) => {
-        const element = $(this)[0].activeElement.parentElement.parentElement;
+        const element = $(e.target).closest('tr');
         const id = $(element).attr('productId');
-        $.post('./backend/product-single.php', {id}, (response) => {
+        $.post('./backend/product-single.php', { id }, (response) => {
             let product = JSON.parse(response);
 
             // Carga los valores del JSON en cada campo del formulario
             $('#name').val(product.nombre);
-            $('#productId').val(product.id);
+            $('#marca').val(product.marca);
+            $('#modelo').val(product.modelo);
             $('#precio').val(product.precio);
             $('#unidades').val(product.unidades);
-            $('#modelo').val(product.modelo);
-            $('#marca').val(product.marca);
             $('#detalles').val(product.detalles);
             $('#imagen').val(product.imagen);
+            $('#productId').val(product.id);
 
-            edit = true;
+            edit = true; // Cambia a modo edición
         });
         e.preventDefault();
-    });    
+    });
 });
