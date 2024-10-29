@@ -16,17 +16,36 @@ $(document).ready(function() {
     // Validaciones
     function validarNombre() {
         const nombre = $('#name').val();
+        $('#name-status').text(''); // Limpiar el mensaje de estado antes de validar
+    
         if (nombre.trim() === "") {
             $('#name-status').text('El nombre es requerido.').css('color', 'red');
-            return false;
+            return false; // Nombre vacío es inválido
         } else if (nombre.length > 100) {
             $('#name-status').text('El nombre debe tener 100 caracteres o menos.').css('color', 'red');
-            return false;
+            return false; // Nombre demasiado largo es inválido
         } else {
-            $('#name-status').text('¡Bien!').css('color', 'green');
-            return true;
+            // Validación asíncrona para verificar si el nombre ya existe
+            $.ajax({
+                url: './backend/product-check.php',
+                type: 'GET',
+                data: { nombre: nombre },
+                success: function(response) {
+                    if (response.exists) {
+                        $('#name-status').text('El nombre ya existe.').css('color', 'red');
+                    } else {
+                        $('#name-status').text('¡Bien!').css('color', 'green');
+                    }
+                },
+                error: function() {
+                    $('#name-status').text('Error al verificar el nombre.').css('color', 'red');
+                }
+            });
         }
+        return true; // Retornar true mientras se realiza la verificación asíncrona
     }
+    
+    
 
     function validarMarca() {
         const marca = $('#marca').val();
