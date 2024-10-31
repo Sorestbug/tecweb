@@ -14,36 +14,48 @@ $(document).ready(function() {
     listarProductos();
 
     // Validaciones
-    function validarNombre() {
-        const nombre = $('#name').val();
-        $('#name-status').text(''); // Limpiar el mensaje de estado antes de validar
-    
-        if (nombre.trim() === "") {
-            $('#name-status').text('El nombre es requerido.').css('color', 'red');
-            return false; // Nombre vacío es inválido
-        } else if (nombre.length > 100) {
-            $('#name-status').text('El nombre debe tener 100 caracteres o menos.').css('color', 'red');
-            return false; // Nombre demasiado largo es inválido
-        } else {
-            // Validación asíncrona para verificar si el nombre ya existe
-            $.ajax({
-                url: './backend/product-check.php',
-                type: 'GET',
-                data: { nombre: nombre },
-                success: function(response) {
-                    if (response.exists) {
-                        $('#name-status').text('El nombre ya existe.').css('color', 'red');
-                    } else {
-                        $('#name-status').text('¡Bien!').css('color', 'green');
-                    }
-                },
-                error: function() {
-                    $('#name-status').text('Error al verificar el nombre.').css('color', 'red');
+        // Validaciones
+function validarNombre() {
+    const nombre = $('#name').val();
+    $('#name-status').text(''); // Limpiar el mensaje de estado antes de validar
+
+    if (nombre.trim() === "") {
+        $('#name-status').text('El nombre es requerido.').css('color', 'red');
+        return false; // Nombre vacío es inválido
+    } else if (nombre.length > 100) {
+        $('#name-status').text('El nombre debe tener 100 caracteres o menos.').css('color', 'red');
+        return false; // Nombre demasiado largo es inválido
+    } else {
+        // Validación asíncrona para verificar si el nombre ya existe
+        $.ajax({
+            url: './backend/product-check.php',
+            type: 'GET',
+            data: { nombre: nombre },
+            dataType: 'json', // Esperamos recibir un JSON
+            success: function(response) {
+                console.log(response); // Imprimir la respuesta para depuración
+
+                // Verificar si hay un error en la respuesta
+                if (response.error) {
+                    $('#name-status').text(response.error).css('color', 'red');
+                    return false; // Retornar falso si hay un error
                 }
-            });
-        }
-        return true; // Retornar true mientras se realiza la verificación asíncrona
+
+                if (response.exists) {
+                    $('#name-status').text('El nombre ya existe.').css('color', 'red');
+                } else {
+                    $('#name-status').text('¡Bien!').css('color', 'green');
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#name-status').text('Error al verificar el nombre.').css('color', 'red');
+                console.error('AJAX Error:', status, error); // Imprimir detalles del error
+            }
+        });
     }
+    return true; // Retornar true mientras se realiza la verificación asíncrona
+}
+
     
     
 
