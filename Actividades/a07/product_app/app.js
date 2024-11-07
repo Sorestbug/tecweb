@@ -230,40 +230,50 @@ $(document).ready(function() {
         e.preventDefault();
 
         // Validar campos antes de agregar el producto
-        if (validarNombre() && validarMarca() && validarModelo() && validarPrecio() && validarUnidades() && validarDetalles() && validarImagen()) {
-            // Se crea el objeto JSON a partir de los valores de los campos de formulario
-            let postData = {
-                nombre: $('#name').val(),
-                id: $('#productId').val(),
-                precio: parseFloat($('#precio').val()) || 0.0,
-                unidades: parseInt($('#unidades').val()) || 1,
-                modelo: $('#modelo').val() || "XX-000",
-                marca: $('#marca').val() || "NA",
-                detalles: $('#detalles').val() || "NA",
-                imagen: $('#imagen').val() || "./img/default.png"
-            };
+if (validarNombre() && validarMarca() && validarModelo() && validarPrecio() && validarUnidades() && validarDetalles() && validarImagen()) {
+    // Se crea el objeto JSON a partir de los valores de los campos de formulario
+    let postData = {
+        nombre: $('#name').val(),
+        id: $('#productId').val(),
+        precio: parseFloat($('#precio').val()) || 0.0,
+        unidades: parseInt($('#unidades').val()) || 1,
+        modelo: $('#modelo').val() || "XX-000",
+        marca: $('#marca').val() || "NA",
+        detalles: $('#detalles').val() || "NA",
+        imagen: $('#imagen').val() || "./img/default.png"
+    };
 
-            const url = edit === false ? './backend/product-add.php' : './backend/product-edit.php';
+    const url = edit === false ? './backend/product-add.php' : './backend/product-edit.php';
 
-            $.post(url, postData, (response) => {
-                let respuesta = JSON.parse(response);
-                let template_bar = `
-                    <li style="list-style: none;">status: ${respuesta.status}</li>
-                    <li style="list-style: none;">message: ${respuesta.message}</li>
-                `;
-                $('#product-result').show();
-                $('#container').html(template_bar);
-                listarProductos();
-                edit = false;
+    $.post(url, postData, (response) => {
+        console.log("Respuesta del servidor:", response); // Ver respuesta completa
+        
+        try {
+            let respuesta = JSON.parse(response);
+            let template_bar = `
+                <li style="list-style: none;">status: ${respuesta.status}</li>
+                <li style="list-style: none;">message: ${respuesta.message}</li>
+            `;
+            $('#product-result').show();
+            $('#container').html(template_bar);
+            listarProductos();
+            edit = false;
 
-                // Reinicia los campos del formulario
-                $('#product-form').trigger('reset');
-                // Limpiar los estados de validación
-                $('.form-text').text('');
-            });
-        } else {
-            alert("Por favor corrige los errores en el formulario antes de enviar.");
+            // Reinicia los campos del formulario
+            $('#product-form').trigger('reset');
+            // Limpiar los estados de validación
+            $('.form-text').text('');
+        } catch (error) {
+            console.error("Error al parsear JSON:", error);
+            alert("Error al procesar la respuesta del servidor. Verifica la consola.");
         }
+    });
+} else {
+    alert("Por favor corrige los errores en el formulario antes de enviar.");
+}
+
+       
+
     });
 
     $(document).on('click', '.product-delete', (e) => {

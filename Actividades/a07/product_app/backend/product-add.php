@@ -1,5 +1,5 @@
-<?php
-    include_once __DIR__.'/database.php';
+    <?php
+   /* include_once __DIR__.'/database.php';
 
     // SE OBTIENE LA INFORMACIÓN DEL PRODUCTO ENVIADA POR EL CLIENTE
     $data = array(
@@ -31,4 +31,20 @@
 
     // SE HACE LA CONVERSIÓN DE ARRAY A JSON
     echo json_encode($data, JSON_PRETTY_PRINT);
-?>
+    */
+
+
+    use YourNamespace\Products;
+    include_once __DIR__ . '/Products.php';
+    
+    // Establecer el tipo de contenido a JSON
+    header('Content-Type: application/json');
+    
+    // Crear la instancia de Products
+    $productos = new Products("localhost", "root", "12345678a", "marketzone");
+    
+    // Llamar al método add() y devolver la respuesta JSON
+    echo $productos->add(json_decode(json_encode($_POST)));
+
+    
+    ?>
