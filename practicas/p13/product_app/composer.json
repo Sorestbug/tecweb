@@ -1,0 +1,13 @@
+{
+    "name": "champ/product_app",
+    "description": "Producto CRUD API",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "TECWEB\\MYAPI\\": "myapi/"
+        }
+    },
+    "require": {
+        "php": "^8.2.12"
+    }
+}
