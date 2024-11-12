@@ -3,6 +3,7 @@ namespace TECWEB\MYAPI;
 
 use TECWEB\MYAPI\DataBase;
 require_once __DIR__ . '/DataBase.php';
+//require_once __DIR__ . '/../vendor/autoload.php';
 
 class Products extends DataBase {
     private $data;

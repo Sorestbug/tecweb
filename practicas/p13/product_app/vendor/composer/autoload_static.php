@@ -16,7 +16,7 @@ class ComposerStaticInitb20286346b2e8b8876f1e41d5460df75
     public static $prefixDirsPsr4 = array (
         'TECWEB\\MYAPI\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/myapi',
+            0 => __DIR__ . '/../..' . '/product_app/backend/myapi',
         ),
     );
 
