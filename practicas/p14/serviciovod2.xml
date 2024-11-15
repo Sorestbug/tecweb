@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE CatalogoVOD SYSTEM "serviciovod.dtd">
+
+<CatalogoVOD>
+    <cuenta correo="sorestbug@gmail.com">
+        <perfiles>
+            <perfil usuario="Meme" idioma="Español" />
+            <perfil usuario="Pedrito" idioma="Inglés" />
+        </perfiles>
+    </cuenta>
+    
+    <contenido>
+        <peliculas>
+            <genero nombre="Acción">
+                <titulo duracion="02:20:00">Rápido y Furioso 7</titulo>
+                <titulo duracion="02:00:00">Mad Max Fury Road</titulo>
+                <titulo duracion="02:24:00">Casino Royale</titulo>
+                <titulo duracion="01:42:00">RoboCop</titulo>
+            </genero>
+            <genero nombre="Comedia">
+                <titulo duracion="01:24:00">Scary Movie 3</titulo>
+                <titulo duracion="01:48:00">Jojo Rabbit</titulo>
+                <titulo duracion="01:39:00">Shaun of the Dead</titulo>
+                <titulo duracion="01:56:00">Ted 2</titulo>
+            </genero>
+        </peliculas>
+        
+        <programas>
+            <genero nombre="Animación">
+                <titulo duracion="00:24:00">Gravity Falls</titulo>
+                <titulo duracion="00:24:00">Futurama</titulo>
+                <titulo duracion="00:48:00">Arcane</titulo>
+                <titulo duracion="00:24:00">Ducktales</titulo>
+            </genero>
+            <genero nombre="Sitcoms">
+                <titulo duracion="00:24:00">How I Met Your Mother</titulo>
+                <titulo duracion="00:24:00">Brooklyn 99</titulo>
+                <titulo duracion="00:24:00">Malcom el de enmedio</titulo>
+                <titulo duracion="00:48:00">The Bear</titulo>
+            </genero>
+        </programas>
+    </contenido>
+</CatalogoVOD>

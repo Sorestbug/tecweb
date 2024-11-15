@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="21.0">
+    <meta>
+        <filters directoryPatterns="" filePatterns="\QPractica%2014%20Oxygen.xpr\E" positiveFilePatterns="" showHiddenFiles="false"/>
+        <options/>
+    </meta>
+    <projectTree name="Practica%2014%20Oxygen.xpr">
+        <folder path="."/>
+    </projectTree>
+</project>
